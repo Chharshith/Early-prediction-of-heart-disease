@@ -1,4 +1,4 @@
-# Early-prediction-of-heart-disease
+# Algorithm development for Research Early-prediction-of-heart-disease
 
 # Heart Disease Prediction using Decision Tree Classifier
 
