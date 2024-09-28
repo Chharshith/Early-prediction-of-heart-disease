@@ -6,24 +6,26 @@ import requests
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import json
 
-# API URL for fetching data (replace with your actual API endpoint)
-API_URL = "https://api.example.com/data"  # Replace with the actual API endpoint
+# API URL for fetching data from the UCI Machine Learning Repository
+API_URL = "https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/heart.csv"  # UCI Heart Disease dataset
+
+# Column names as provided
+column_names = ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal", "target"]
 
 # Fetch data from the API
 try:
     response = requests.get(API_URL)
     if response.status_code == 200:
-        data = response.json()
-        print(f"Data fetched from API: {len(data)} records.")
+        # Decode the batch data directly into a DataFrame
+        data = response.content.decode('utf-8')
+        df = pd.read_csv(pd.compat.StringIO(data), names=column_names, header=0)  # Create DataFrame with defined columns
+        print(f"Data fetched from API: {len(df)} records.")
     else:
         print(f"Failed to fetch data. Status code: {response.status_code}")
         exit()
 except Exception as e:
     print(f"Error fetching data from API: {e}")
     exit()
-
-# Decode the fetched JSON data into a DataFrame
-df = pd.DataFrame(data)
 
 # Basic Data Information
 print("\n--- Basic Information ---")
@@ -47,7 +49,7 @@ plt.show()
 cat_columns = ["sex", "cp", "fbs", "restecg", "exang", "slope", "ca", "thal"]
 plt.figure(figsize=(15, 10))
 for i, col in enumerate(cat_columns):
-    plt.subplot(3, 3, i+1)
+    plt.subplot(3, 3, i + 1)
     sns.countplot(x=col, data=df)
     plt.title(f"Distribution of {col}")
 plt.tight_layout()
